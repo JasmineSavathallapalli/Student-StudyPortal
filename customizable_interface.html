@@ -1,0 +1,103 @@
+<!-- customizable_interface.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customizable Interface - SmartStudyHub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (localStorage.getItem("theme") === "dark") {
+                document.body.classList.add("bg-dark", "text-white");
+                document.getElementById("themeSelector").value = "dark";
+            }
+            if (localStorage.getItem("color")) {
+                document.documentElement.style.setProperty('--bs-primary', localStorage.getItem("color"));
+                document.getElementById("colorPicker").value = localStorage.getItem("color");
+            }
+            if (localStorage.getItem("fontSize")) {
+                document.body.style.fontSize = localStorage.getItem("fontSize") + "px";
+                document.getElementById("fontSize").value = localStorage.getItem("fontSize");
+            }
+        });
+    </script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="dashboard.html">SmartStudyHub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="study_rooms.html">Study Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="todo_list.html">To-Do List</a></li>
+                    <li class="nav-item"><a class="nav-link" href="performance.html">Performance</a></li>
+                    <li class="nav-item"><a class="nav-link" href="google_meet_clone.html">Meet</a></li>
+                    <li class="nav-item"><a class="nav-link" href="study_timer.html">Study Timer</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="customizable_interface.html">Settings</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-light text-primary" href="authentication.html">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Customization Section -->
+    <div class="container mt-5">
+        <h1 class="text-center fw-bold">Customizable Interface</h1>
+        <p class="text-center text-muted">Personalize your study experience.</p>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <label class="fw-bold">Theme</label>
+                <select id="themeSelector" class="form-select mb-3" onchange="changeTheme()">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+                
+                <label class="fw-bold">Primary Color</label>
+                <input type="color" id="colorPicker" class="form-control form-control-color mb-3" onchange="changeColor()">
+                
+                <label class="fw-bold">Font Size</label>
+                <input type="range" id="fontSize" class="form-range" min="14" max="24" value="16" onchange="changeFontSize()">
+            </div>
+        </div>
+    </div>
+    
+    <footer class="bg-primary text-white text-center py-3 mt-5">
+        <p class="mb-0">&copy; 2025 SmartStudyHub. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function changeTheme() {
+            let theme = document.getElementById("themeSelector").value;
+            if (theme === "dark") {
+                document.body.classList.add("bg-dark", "text-white");
+                localStorage.setItem("theme", "dark");
+            } else {
+                document.body.classList.remove("bg-dark", "text-white");
+                document.body.classList.add("bg-light", "text-dark");
+                localStorage.setItem("theme", "light");
+            }
+        }
+        
+        function changeColor() {
+            let color = document.getElementById("colorPicker").value;
+            document.documentElement.style.setProperty('--bs-primary', color);
+            localStorage.setItem("color", color);
+        }
+        
+        function changeFontSize() {
+            let size = document.getElementById("fontSize").value;
+            document.body.style.fontSize = size + "px";
+            localStorage.setItem("fontSize", size);
+        }
+    </script>
+</body>
+</html>

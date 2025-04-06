@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Rooms - SmartStudyHub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client/dist/socket.io.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="dashboard.html">SmartStudyHub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="study_rooms.html">Study Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="todo_list.html">To-Do List</a></li>
+                    <li class="nav-item"><a class="nav-link" href="performance.html">Performance</a></li>
+                    <li class="nav-item"><a class="nav-link" href="google_meet_clone.html">Meet</a></li>
+                    <li class="nav-item"><a class="nav-link" href="study_timer.html">Study Timer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="customizable_interface.html">Settings</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-light text-primary" href="authentication.html">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Study Room Section -->
+    <div class="container mt-5">
+        <h1 class="text-center fw-bold">Join a Study Room</h1>
+        <p class="text-center text-muted">Join a study room and collaborate with peers in real time.</p>
+        
+        <!-- Display Available Study Rooms -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h3 class="fw-bold">Active Study Rooms</h3>
+                <ul class="list-group" id="studyRoomList">
+                    <li class="list-group-item text-center text-muted">Loading available rooms...</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Create New Room -->
+        <div class="text-center mt-4">
+            <button class="btn btn-success" id="createRoomBtn">Create New Room</button>
+        </div>
+    </div>
+
+    <footer class="bg-primary text-white text-center py-3 mt-5">
+        <p class="mb-0">&copy; 2025 SmartStudyHub. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const socket = io("http://localhost:5000"); // WebSocket connection
+        const studyRoomList = document.getElementById("studyRoomList");
+
+        // Fetch available study rooms
+        function fetchStudyRooms() {
+            fetch("http://localhost:5000/api/rooms")
+                .then(response => response.json())
+                .then(rooms => {
+                    studyRoomList.innerHTML = "";
+                    if (rooms.length === 0) {
+                        studyRoomList.innerHTML = '<li class="list-group-item text-center text-muted">No active study rooms. Create one now!</li>';
+                    } else {
+                        rooms.forEach(room => {
+                            const li = document.createElement("li");
+                            li.className = "list-group-item d-flex justify-content-between align-items-center";
+                            li.innerHTML = `
+                                <span class="fw-bold">${room.name}</span>
+                                <span class="badge bg-primary">${room.users} Online</span>
+                                <button class="btn btn-primary btn-sm" onclick="joinRoom('${room.id}')">Join</button>
+                            `;
+                            studyRoomList.appendChild(li);
+                        });
+                    }
+                });
+        }
+
+        // Join a room
+        function joinRoom(roomId) {
+            window.location.href = `google_meet_clone.html?room=${roomId}`;
+        }
+
+        // Create new room
+        document.getElementById("createRoomBtn").addEventListener("click", function() {
+            fetch("http://localhost:5000/api/create-room", { method: "POST" })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.roomId) {
+                        window.location.href = `google_meet_clone.html?room=${data.roomId}`;
+                    }
+                });
+        });
+
+        // Real-time updates on study rooms
+        socket.on("updateRooms", fetchStudyRooms);
+
+        // Load study rooms on page load
+        fetchStudyRooms();
+    </script>
+
+    <!-- Next Steps -->
+    <div class="container mt-5">
+        <h2 class="fw-bold">Next Steps</h2>
+        <ul class="list-group">
+            <li class="list-group-item">💬 Add a Chat System in Study Rooms.</li>
+            <li class="list-group-item">🗄️ Sync Study Rooms with MongoDB.</li>
+            <li class="list-group-item">📊 Implement User Profiles with Study History.</li>
+        </ul>
+    </div>
+</body>
+</html>

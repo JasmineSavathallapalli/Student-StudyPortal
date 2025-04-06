@@ -1,0 +1,18 @@
+body::before{
+    display:block;
+    content:"";
+    height: 60px;
+
+}
+@media(min-width:768px){
+    .news-input{
+        width:50%;
+    }
+}
+li:hover{
+    background-color: #71a7f7";
+    border-radius: 10px;
+    transform: scale(1.15);
+    transition: all 0.3s;
+   
+}
